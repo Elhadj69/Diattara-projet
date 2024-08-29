@@ -1,0 +1,39 @@
+#### Produce du Data Projet DataStriming
+from kafka import KafkaProducer
+import json
+
+# Configuration du producteur Kafka
+producer = KafkaProducer(
+    bootstrap_servers='kfakasda.eastus.cloudapp.azure.com:9092',  
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+# Message JSON à envoyer
+message = {
+    "data": [
+        {
+            "confort": "standard",
+            "prix_base_per_km": 3,
+            "properties-client": {
+                "logitude": 2.3522,
+                "latitude": 48.8566,
+                "nomclient": "FALL",
+                "telephoneClient": "060786575"
+            },
+            "properties-driver": {
+                "logitude": 3.7038,
+                "latitude": 40.4168,
+                "nomDriver": "DIOP",
+                "telephoneDriver": "070786575"
+            }
+        }
+    ]
+}
+
+# Envoi du message au topic 'eladj'
+producer.send('sda_datastreaming', value=message)
+
+# Attente de la livraison de tous les messages
+producer.flush()
+
+print("Message envoyé avec succès.")
